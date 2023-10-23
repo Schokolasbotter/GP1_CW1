@@ -20,6 +20,9 @@ public class PlayerWeaponScript : MonoBehaviour
     [SerializeField] private float normalFov;
     [SerializeField] private float binocularFov;
     [SerializeField] private float gunFov;
+    private bool aiming = false;
+    private float chargingTimer = 0f;
+    private int chargeLevel = 0;
 
     [Header("References")]
     //References
@@ -50,7 +53,19 @@ public class PlayerWeaponScript : MonoBehaviour
         }
 
         //Shooting
-        if (weaponState == Weaponstate.Gun && inputActions.Character.Shooting.WasReleasedThisFrame())
+        if (weaponState == Weaponstate.Gun && inputActions.Character.Shooting.IsPressed() && aiming)
+        {
+            chargingTimer += Time.deltaTime;
+            if(chargingTimer > 0.5f)
+            {
+                chargeLevel = 1;
+            }
+            else if(chargingTimer > 1f)
+            {
+                chargeLevel = 2;
+            }
+        }
+            if (weaponState == Weaponstate.Gun && inputActions.Character.Shooting.WasReleasedThisFrame() && aiming)
         {
             regularShot();
         }
@@ -77,6 +92,7 @@ public class PlayerWeaponScript : MonoBehaviour
                 }
                 break;
         }
+        aiming = true;
     }
 
     private void regularFOV()
@@ -85,6 +101,7 @@ public class PlayerWeaponScript : MonoBehaviour
         {
             playerCamera.fieldOfView += 2f;
         }
+        aiming = false;
     }
     void changeWeapon()
     {
