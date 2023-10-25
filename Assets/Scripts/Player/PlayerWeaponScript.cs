@@ -20,15 +20,19 @@ public class PlayerWeaponScript : MonoBehaviour
     [SerializeField] private float normalFov;
     [SerializeField] private float binocularFov;
     [SerializeField] private float gunFov;
-    private bool aiming = false;
+    public bool aiming = false;
     private float chargingTimer = 0f;
-    private int chargeLevel = 0;
+    [SerializeField] private float chargeTime1 = 0.5f;
+    [SerializeField] private float chargeTime2 = 1f;
+    [SerializeField] private int chargeLevel = 0;
 
     [Header("References")]
     //References
     [SerializeReference] private Camera playerCamera;
     public GameObject handWithGun;
     public GameObject regularBulletPrefab;
+    public GameObject regularBulletPrefab1;
+    public GameObject regularBulletPrefab2;
     public GameObject gunShotPoint;
     public GameObject bulletContainer;
     public GameObject handWithBinoculars;
@@ -56,24 +60,39 @@ public class PlayerWeaponScript : MonoBehaviour
         if (weaponState == Weaponstate.Gun && inputActions.Character.Shooting.IsPressed() && aiming)
         {
             chargingTimer += Time.deltaTime;
-            if(chargingTimer > 0.5f)
-            {
-                chargeLevel = 1;
-            }
-            else if(chargingTimer > 1f)
+            if (chargingTimer > chargeTime2)
             {
                 chargeLevel = 2;
             }
+            else if (chargingTimer > chargeTime1)
+            {
+                chargeLevel = 1;
+            }
+
         }
-            if (weaponState == Weaponstate.Gun && inputActions.Character.Shooting.WasReleasedThisFrame() && aiming)
+        if (weaponState == Weaponstate.Gun && inputActions.Character.Shooting.WasReleasedThisFrame() && aiming)
         {
-            regularShot();
+            shoot();
         }
     }
 
-    private void regularShot()
+    private void shoot()
     {
-        Instantiate(regularBulletPrefab, gunShotPoint.transform.position, gunShotPoint.transform.rotation, bulletContainer.transform);
+        switch (chargeLevel)
+        {
+            case 0:
+                Instantiate(regularBulletPrefab, gunShotPoint.transform.position, gunShotPoint.transform.rotation, bulletContainer.transform);
+                break;
+            case 1:
+                Instantiate(regularBulletPrefab1, gunShotPoint.transform.position, gunShotPoint.transform.rotation, bulletContainer.transform);
+                break;
+            case 2:
+                Instantiate(regularBulletPrefab2, gunShotPoint.transform.position, gunShotPoint.transform.rotation, bulletContainer.transform);
+                break;
+
+        }
+        chargeLevel = 0;
+        chargingTimer = 0;
     }
     void aim()
     {
