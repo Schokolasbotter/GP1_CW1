@@ -3,9 +3,6 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Events;
-using Unity.VisualScripting;
-using UnityEditor.Rendering;
 
 public class PlayerWeaponScript : MonoBehaviour
 {
@@ -42,7 +39,13 @@ public class PlayerWeaponScript : MonoBehaviour
     public GameObject bulletContainer;
     public GameObject handWithBinoculars;
     private InputActions inputActions;
+    public GameObject particleSystemGameObject;
+    private new ParticleSystem particleSystem;
 
+    private void Start()
+    {
+        particleSystem = particleSystemGameObject.GetComponent<ParticleSystem>();
+    }
     void Update()
     {
         //Weapon Change
@@ -102,6 +105,7 @@ public class PlayerWeaponScript : MonoBehaviour
                 break;
 
         }
+        particleSystem.Play();
         chargeLevel = 0;
         chargingTimer = 0;
     }
