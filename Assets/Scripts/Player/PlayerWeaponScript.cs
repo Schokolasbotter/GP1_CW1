@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Events;
 using Unity.VisualScripting;
+using UnityEditor.Rendering;
 
 public class PlayerWeaponScript : MonoBehaviour
 {
@@ -20,19 +21,23 @@ public class PlayerWeaponScript : MonoBehaviour
     [SerializeField] private float normalFov;
     [SerializeField] private float binocularFov;
     [SerializeField] private float gunFov;
+    [SerializeField][Range(1f,100f)] private float fovSpeed;
+    public AnimationCurve binoculareCurve = new AnimationCurve();
+    private float t = 0;
     public bool aiming = false;
+    public bool charging = false;
     private float chargingTimer = 0f;
     [SerializeField] private float chargeTime1 = 0.5f;
     [SerializeField] private float chargeTime2 = 1f;
-    [SerializeField] private int chargeLevel = 0;
+    public int chargeLevel = 0;
 
     [Header("References")]
     //References
     [SerializeReference] private Camera playerCamera;
     public GameObject handWithGun;
-    public GameObject regularBulletPrefab;
-    public GameObject regularBulletPrefab1;
-    public GameObject regularBulletPrefab2;
+    public GameObject regularBulletPrefabS;
+    public GameObject regularBulletPrefabM;
+    public GameObject regularBulletPrefabL;
     public GameObject gunShotPoint;
     public GameObject bulletContainer;
     public GameObject handWithBinoculars;
@@ -49,16 +54,20 @@ public class PlayerWeaponScript : MonoBehaviour
         //Aiming
         if (inputActions.Character.Aiming.IsPressed())
         {
-            aim();
+            aiming = true;
+            t = Mathf.Clamp01(t + (fovSpeed * Time.deltaTime));
         }
         else
         {
-            regularFOV();
+            aiming = false;
+            t = Mathf.Clamp01(t - (fovSpeed * Time.deltaTime));
         }
+        aim();
 
         //Shooting
         if (weaponState == Weaponstate.Gun && inputActions.Character.Shooting.IsPressed() && aiming)
         {
+            charging = true;
             chargingTimer += Time.deltaTime;
             if (chargingTimer > chargeTime2)
             {
@@ -70,6 +79,8 @@ public class PlayerWeaponScript : MonoBehaviour
             }
 
         }
+        else { charging = false;}
+
         if (weaponState == Weaponstate.Gun && inputActions.Character.Shooting.WasReleasedThisFrame() && aiming)
         {
             shoot();
@@ -77,17 +88,17 @@ public class PlayerWeaponScript : MonoBehaviour
     }
 
     private void shoot()
-    {
+    { 
         switch (chargeLevel)
         {
             case 0:
-                Instantiate(regularBulletPrefab, gunShotPoint.transform.position, gunShotPoint.transform.rotation, bulletContainer.transform);
+                Instantiate(regularBulletPrefabS, gunShotPoint.transform.position, gunShotPoint.transform.rotation, bulletContainer.transform);
                 break;
             case 1:
-                Instantiate(regularBulletPrefab1, gunShotPoint.transform.position, gunShotPoint.transform.rotation, bulletContainer.transform);
+                Instantiate(regularBulletPrefabM, gunShotPoint.transform.position, gunShotPoint.transform.rotation, bulletContainer.transform);
                 break;
             case 2:
-                Instantiate(regularBulletPrefab2, gunShotPoint.transform.position, gunShotPoint.transform.rotation, bulletContainer.transform);
+                Instantiate(regularBulletPrefabL, gunShotPoint.transform.position, gunShotPoint.transform.rotation, bulletContainer.transform);
                 break;
 
         }
@@ -99,29 +110,15 @@ public class PlayerWeaponScript : MonoBehaviour
         switch (weaponState)
         {
             case Weaponstate.Binoculars:
-                if(playerCamera.fieldOfView > binocularFov)
-                {
-                    playerCamera.fieldOfView -= 2f;
-                }
+                playerCamera.fieldOfView = Mathf.Lerp(normalFov, binocularFov, binoculareCurve.Evaluate(t));
+
                 break; 
             case Weaponstate.Gun:
-                if (playerCamera.fieldOfView > gunFov)
-                {
-                    playerCamera.fieldOfView -= 2f;
-                }
+                playerCamera.fieldOfView = Mathf.Lerp(normalFov, gunFov, t);
                 break;
         }
-        aiming = true;
     }
 
-    private void regularFOV()
-    {
-        if (playerCamera.fieldOfView < normalFov)
-        {
-            playerCamera.fieldOfView += 2f;
-        }
-        aiming = false;
-    }
     void changeWeapon()
     {
         if(weaponState == Weaponstate.Binoculars)
