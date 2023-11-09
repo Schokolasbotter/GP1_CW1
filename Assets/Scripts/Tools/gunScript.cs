@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class gunScript : MonoBehaviour
 {
+    
     public Transform regularPosition;
     public Transform aimingPosition;
     public PlayerWeaponScript weaponScript;
@@ -13,9 +14,32 @@ public class gunScript : MonoBehaviour
     [SerializeField][Range(0f, 0.1f)] private float shakeRange = 0.02f;
     [SerializeField][Range(0f, 300f)] private float shakeSpeed = 100f;
     private float shakeTimer;
+    public MeshRenderer gunLight;
+    private Material gunLightMaterial;
+    [ColorUsage(false, true)]
+    public Color color0,color1,color2;
 
+
+    private void Start()
+    {
+        gunLightMaterial = gunLight.material;
+    }
     void Update()
     {
+        if (weaponScript.charging && weaponScript.chargeLevel <1)
+        {
+            
+            gunLightMaterial.SetColor("_EmissionColor", Color.Lerp(color0,color1,Mathf.Lerp(0f,weaponScript.chargeTime1, weaponScript.chargingTimer)));
+        }
+        else if(weaponScript.charging && weaponScript.chargeLevel <= 2)
+        {
+            gunLightMaterial.SetColor("_EmissionColor", Color.Lerp(color1, color2, Mathf.Lerp(weaponScript.chargeTime1, weaponScript.chargeTime2, weaponScript.chargingTimer))) ; 
+        }
+        else
+        {
+            gunLightMaterial.SetColor("_EmissionColor", color0);
+        }
+
         bool aiming = weaponScript.aiming;
         if (aiming)
         {

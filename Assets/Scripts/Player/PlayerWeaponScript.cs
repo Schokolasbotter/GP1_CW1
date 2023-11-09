@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
+using TMPro;
 
 public class PlayerWeaponScript : MonoBehaviour
 {
@@ -23,10 +25,13 @@ public class PlayerWeaponScript : MonoBehaviour
     private float t = 0;
     public bool aiming = false;
     public bool charging = false;
-    private float chargingTimer = 0f;
-    [SerializeField] private float chargeTime1 = 0.5f;
-    [SerializeField] private float chargeTime2 = 1f;
+    public float chargingTimer = 0f;
+    public float chargeTime1 = 0.5f;
+    public float chargeTime2 = 1f;
     public int chargeLevel = 0;
+    public bool cooling = false;
+    [Range(0f,10f)]public float coolingTime = 1f;
+    private float coolingTimer = 0f;
 
     [Header("References")]
     //References
@@ -41,11 +46,13 @@ public class PlayerWeaponScript : MonoBehaviour
     private InputActions inputActions;
     public GameObject particleSystemGameObject;
     private new ParticleSystem particleSystem;
+    public TextMeshProUGUI scannerText, gunText, crosshairText;
 
     private void Start()
     {
         particleSystem = particleSystemGameObject.GetComponent<ParticleSystem>();
     }
+
     void Update()
     {
         //Weapon Change
@@ -58,17 +65,33 @@ public class PlayerWeaponScript : MonoBehaviour
         if (inputActions.Character.Aiming.IsPressed())
         {
             aiming = true;
+            if(weaponState == Weaponstate.Gun)
+            {
+                crosshairText.text = " ";
+            }
+            else if(weaponState == Weaponstate.Binoculars)
+            {
+                crosshairText.text = "O";
+            }
             t = Mathf.Clamp01(t + (fovSpeed * Time.deltaTime));
         }
         else
         {
             aiming = false;
+            crosshairText.text = "=";
             t = Mathf.Clamp01(t - (fovSpeed * Time.deltaTime));
         }
         aim();
 
-        //Shooting
-        if (weaponState == Weaponstate.Gun && inputActions.Character.Shooting.IsPressed() && aiming)
+        //Gun
+        //Cooldown
+        coolingTimer += Time.deltaTime;
+        if(coolingTimer >= coolingTime)
+        {
+            cooling = false;
+        }
+        //Charging
+        if (weaponState == Weaponstate.Gun && inputActions.Character.Shooting.IsPressed() && aiming && !cooling)
         {
             charging = true;
             chargingTimer += Time.deltaTime;
@@ -84,7 +107,8 @@ public class PlayerWeaponScript : MonoBehaviour
         }
         else { charging = false;}
 
-        if (weaponState == Weaponstate.Gun && inputActions.Character.Shooting.WasReleasedThisFrame() && aiming)
+        //Shooting
+        if (weaponState == Weaponstate.Gun && inputActions.Character.Shooting.WasReleasedThisFrame() && aiming && !cooling)
         {
             shoot();
         }
@@ -108,6 +132,8 @@ public class PlayerWeaponScript : MonoBehaviour
         particleSystem.Play();
         chargeLevel = 0;
         chargingTimer = 0;
+        coolingTimer = 0;
+        cooling = true;
     }
     void aim()
     {
@@ -130,12 +156,20 @@ public class PlayerWeaponScript : MonoBehaviour
             weaponState = Weaponstate.Gun;
             handWithBinoculars.SetActive(false);
             handWithGun.SetActive(true);
+            gunText.text = "Gun<";
+            gunText.color = Color.white;
+            scannerText.text = "Scanner[Q]";     
+            scannerText.color = new Color(0.416f, 0.416f, 0.416f);
         }
         else if(weaponState == Weaponstate.Gun)
         {
             weaponState=Weaponstate.Binoculars;
             handWithGun.SetActive(false);
             handWithBinoculars.SetActive(true);
+            gunText.text = "Gun[Q]";
+            gunText.color = new Color(0.416f, 0.416f, 0.416f);
+            scannerText.text = "Scanner<";
+            scannerText.color = Color.white;
         }
     }
 

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -19,9 +20,10 @@ public class PlayerMovement : MonoBehaviour
     public bool characterGrounded = false;
     public Vector3 characterVelocity;
     [SerializeField] private float gravityAcc = 9.81f;
+    public bool inCarStorage = false;
+
 
     //References and Objects
-    [Multiline]
     [Header("References", order=1)]
     private InputActions inputActions;
     private CharacterController characterController;
@@ -30,16 +32,22 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Transform groundCheck;
     #endregion
 
+    public UnityEvent onEnterCar;
+
     private void Awake()
     {
         inputActions = new InputActions(); //Create new Instance of the InputActions
-        characterController = GetComponentInChildren<CharacterController>();
+        characterController = GetComponent<CharacterController>();
         playerCamera = GetComponentInChildren<Camera>();
     }
 
     // Start is called before the first frame update
     void Start()
     {
+        if(onEnterCar == null)
+        {
+            onEnterCar = new UnityEvent();
+        }
     }
 
     // Update is called once per frame
@@ -52,7 +60,7 @@ public class PlayerMovement : MonoBehaviour
     {
         //Check grounded
         characterGrounded = Physics.CheckSphere(groundCheck.position, groundedDistance, groundMask);
-        if(characterGrounded && characterVelocity.y < 0f)
+        if (characterGrounded && characterVelocity.y < 0f)
         {
             characterVelocity.y = 0f;
         }
@@ -72,7 +80,7 @@ public class PlayerMovement : MonoBehaviour
         {
             usedSpeed = aimingSpeed;
         }
-        else if(inputActions.Character.Sprint.IsPressed())
+        else if (inputActions.Character.Sprint.IsPressed())
         {
             usedSpeed = sprintingSpeed;
         }
@@ -84,12 +92,17 @@ public class PlayerMovement : MonoBehaviour
         //Character LookAround
         Vector2 lookingVector = inputActions.Character.Looking.ReadValue<Vector2>();
         //Horizontal
-        transform.Rotate(Vector3.up,lookingVector.x*lookingSensibility*Time.deltaTime);
+        transform.Rotate(Vector3.up, lookingVector.x * lookingSensibility * Time.deltaTime);
         //Vertical 
         verticalRotation -= lookingVector.y * lookingSensibility * Time.deltaTime;
         verticalRotation = Mathf.Clamp(verticalRotation, -70, 70);
-        playerCamera.transform.localRotation = Quaternion.Euler(verticalRotation, 0, 0);      
-   
+        playerCamera.transform.localRotation = Quaternion.Euler(verticalRotation, 0, 0);
+        //Entering Car
+        if (inputActions.Character.EnterCar.IsPressed())
+        {
+            onEnterCar.Invoke();
+        }
+
     }
 
     //InputActions
@@ -98,8 +111,17 @@ public class PlayerMovement : MonoBehaviour
         inputActions.Enable(); // Activate Input
     }
 
+    public void enablePlayerControls()
+    {
+        inputActions.Character.Enable();
+    }
+
     private void OnDisable()
     {
         inputActions.Disable(); //Deactivate Input
+    }
+    public void disablePlayerControls()
+    {
+        inputActions.Character.Disable();
     }
 }

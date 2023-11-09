@@ -89,6 +89,15 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""EnterCar"",
+                    ""type"": ""Button"",
+                    ""id"": ""6e43a0f1-5014-4e1e-a059-3a9b8da93a67"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -212,6 +221,129 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""action"": ""Shooting"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""74026357-eb60-4b36-864d-04caa187e29c"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""EnterCar"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""Car"",
+            ""id"": ""f48a434c-9e14-4cae-ab13-6319bd3a693f"",
+            ""actions"": [
+                {
+                    ""name"": ""Driving"",
+                    ""type"": ""Value"",
+                    ""id"": ""cbb494be-b499-4373-9adc-119e7881d54c"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Boost"",
+                    ""type"": ""Button"",
+                    ""id"": ""68d5f31b-f4b5-4273-b37e-84729cb87d28"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ExitCar"",
+                    ""type"": ""Button"",
+                    ""id"": ""e6dfac7f-e2de-499b-b14b-7947a70e90f6"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": ""2D Vector"",
+                    ""id"": ""de3dd963-fb96-49e5-a271-635ebbe0618e"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Driving"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""26bc815f-1fac-484d-8e6e-665bc887ca13"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Character"",
+                    ""action"": ""Driving"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""ab5803e1-a73a-437d-9791-c2b43222e98e"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Character"",
+                    ""action"": ""Driving"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""32f3b2ef-274b-4c64-85e1-26dd4e7ff7ac"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Character"",
+                    ""action"": ""Driving"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""b3f42b48-80ed-42ed-b6a6-04c4140c3a3c"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Character"",
+                    ""action"": ""Driving"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6ec55c2a-9f5c-41d1-86eb-8d6cfa30a24c"",
+                    ""path"": ""<Keyboard>/shift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Boost"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""de437123-5c14-4abb-a2fa-a09b009c18c0"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ExitCar"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -233,6 +365,12 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         m_Character_WeaponSwap = m_Character.FindAction("WeaponSwap", throwIfNotFound: true);
         m_Character_Aiming = m_Character.FindAction("Aiming", throwIfNotFound: true);
         m_Character_Shooting = m_Character.FindAction("Shooting", throwIfNotFound: true);
+        m_Character_EnterCar = m_Character.FindAction("EnterCar", throwIfNotFound: true);
+        // Car
+        m_Car = asset.FindActionMap("Car", throwIfNotFound: true);
+        m_Car_Driving = m_Car.FindAction("Driving", throwIfNotFound: true);
+        m_Car_Boost = m_Car.FindAction("Boost", throwIfNotFound: true);
+        m_Car_ExitCar = m_Car.FindAction("ExitCar", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -301,6 +439,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Character_WeaponSwap;
     private readonly InputAction m_Character_Aiming;
     private readonly InputAction m_Character_Shooting;
+    private readonly InputAction m_Character_EnterCar;
     public struct CharacterActions
     {
         private @InputActions m_Wrapper;
@@ -312,6 +451,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         public InputAction @WeaponSwap => m_Wrapper.m_Character_WeaponSwap;
         public InputAction @Aiming => m_Wrapper.m_Character_Aiming;
         public InputAction @Shooting => m_Wrapper.m_Character_Shooting;
+        public InputAction @EnterCar => m_Wrapper.m_Character_EnterCar;
         public InputActionMap Get() { return m_Wrapper.m_Character; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -342,6 +482,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @Shooting.started += instance.OnShooting;
             @Shooting.performed += instance.OnShooting;
             @Shooting.canceled += instance.OnShooting;
+            @EnterCar.started += instance.OnEnterCar;
+            @EnterCar.performed += instance.OnEnterCar;
+            @EnterCar.canceled += instance.OnEnterCar;
         }
 
         private void UnregisterCallbacks(ICharacterActions instance)
@@ -367,6 +510,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @Shooting.started -= instance.OnShooting;
             @Shooting.performed -= instance.OnShooting;
             @Shooting.canceled -= instance.OnShooting;
+            @EnterCar.started -= instance.OnEnterCar;
+            @EnterCar.performed -= instance.OnEnterCar;
+            @EnterCar.canceled -= instance.OnEnterCar;
         }
 
         public void RemoveCallbacks(ICharacterActions instance)
@@ -384,6 +530,68 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         }
     }
     public CharacterActions @Character => new CharacterActions(this);
+
+    // Car
+    private readonly InputActionMap m_Car;
+    private List<ICarActions> m_CarActionsCallbackInterfaces = new List<ICarActions>();
+    private readonly InputAction m_Car_Driving;
+    private readonly InputAction m_Car_Boost;
+    private readonly InputAction m_Car_ExitCar;
+    public struct CarActions
+    {
+        private @InputActions m_Wrapper;
+        public CarActions(@InputActions wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Driving => m_Wrapper.m_Car_Driving;
+        public InputAction @Boost => m_Wrapper.m_Car_Boost;
+        public InputAction @ExitCar => m_Wrapper.m_Car_ExitCar;
+        public InputActionMap Get() { return m_Wrapper.m_Car; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(CarActions set) { return set.Get(); }
+        public void AddCallbacks(ICarActions instance)
+        {
+            if (instance == null || m_Wrapper.m_CarActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_CarActionsCallbackInterfaces.Add(instance);
+            @Driving.started += instance.OnDriving;
+            @Driving.performed += instance.OnDriving;
+            @Driving.canceled += instance.OnDriving;
+            @Boost.started += instance.OnBoost;
+            @Boost.performed += instance.OnBoost;
+            @Boost.canceled += instance.OnBoost;
+            @ExitCar.started += instance.OnExitCar;
+            @ExitCar.performed += instance.OnExitCar;
+            @ExitCar.canceled += instance.OnExitCar;
+        }
+
+        private void UnregisterCallbacks(ICarActions instance)
+        {
+            @Driving.started -= instance.OnDriving;
+            @Driving.performed -= instance.OnDriving;
+            @Driving.canceled -= instance.OnDriving;
+            @Boost.started -= instance.OnBoost;
+            @Boost.performed -= instance.OnBoost;
+            @Boost.canceled -= instance.OnBoost;
+            @ExitCar.started -= instance.OnExitCar;
+            @ExitCar.performed -= instance.OnExitCar;
+            @ExitCar.canceled -= instance.OnExitCar;
+        }
+
+        public void RemoveCallbacks(ICarActions instance)
+        {
+            if (m_Wrapper.m_CarActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(ICarActions instance)
+        {
+            foreach (var item in m_Wrapper.m_CarActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_CarActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public CarActions @Car => new CarActions(this);
     private int m_CharacterSchemeIndex = -1;
     public InputControlScheme CharacterScheme
     {
@@ -402,5 +610,12 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         void OnWeaponSwap(InputAction.CallbackContext context);
         void OnAiming(InputAction.CallbackContext context);
         void OnShooting(InputAction.CallbackContext context);
+        void OnEnterCar(InputAction.CallbackContext context);
+    }
+    public interface ICarActions
+    {
+        void OnDriving(InputAction.CallbackContext context);
+        void OnBoost(InputAction.CallbackContext context);
+        void OnExitCar(InputAction.CallbackContext context);
     }
 }
