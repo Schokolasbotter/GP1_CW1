@@ -14,7 +14,7 @@ public class carMovement : MonoBehaviour
     [SerializeField] private float movementSpeed;
     [SerializeField] private float sprintingSpeed;
     [SerializeField] private float turnSpeed;
-    public bool canDock = false, isDocking = false;
+    public bool canDock = false, isDocking = false, isDriving = false;
     private Vector3 startingPosition, dockPosition;
     private Quaternion startingRotation, dockRotation;
     private float dockTimer = 0f;
@@ -100,7 +100,7 @@ public class carMovement : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "Dock")
+        if (other.gameObject.tag == "Dock" && isDriving)
         {
             canDock = true;
             dockPosition = other.transform.position;
@@ -133,11 +133,13 @@ public class carMovement : MonoBehaviour
     public void enableCarControls()
     {
         inputActions.Car.Enable();
+        isDriving = true;
     }
 
     public void disableCarControls()
     {
-        inputActions.Car.Disable(); 
+        inputActions.Car.Disable();
+        isDriving = false;
     }
 
     private void OnEnable()
