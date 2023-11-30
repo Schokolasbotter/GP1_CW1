@@ -11,6 +11,7 @@ public class binocularScript : MonoBehaviour
     [SerializeField][Range(0f, 1f)] private float t = 0;
     [Range(1f, 50f)] public float animationSpeed = 1f;
     public Image spectrumImage;
+    public Image filterImage;
 
     void Update()
     {
@@ -29,11 +30,13 @@ public class binocularScript : MonoBehaviour
         {
             this.GetComponent<MeshRenderer>().enabled = false;
             spectrumImage.gameObject.SetActive(true);
+            filterImage.gameObject.SetActive(true);
         }
         else
         {
             this.GetComponent<MeshRenderer>().enabled = true;
             spectrumImage.gameObject.SetActive(false);
+            filterImage.gameObject.SetActive(false);
         }
     }
 

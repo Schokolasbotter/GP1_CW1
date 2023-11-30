@@ -10,6 +10,7 @@ public class cameraManagerScript : MonoBehaviour
     public Camera playerCamera;
     public Camera carCamera;
     private Animator carAnimator;
+    public Collider waterCollider;
 
     private void Start()
     {
@@ -18,35 +19,52 @@ public class cameraManagerScript : MonoBehaviour
         carAnimator = cm.gameObject.GetComponentInChildren<Animator>();
     }
 
+    private void Update()
+    {
+        if (cm.canEnter)
+        {
+            pm.canEnter = true;
+        }
+        else
+        {
+            pm.canEnter = false;
+        }
+    }
+
     private void enterCar()
     {
+        pm.gameObject.GetComponent<healthScript>().resetHealth();
         //Camera Changes
-        carCamera.GetComponent<Camera>().enabled = true;
+        carCamera.gameObject.SetActive(true);
         playerCamera.gameObject.SetActive(false);
         //Change COntrols
         pm.disablePlayerControls();
         cm.enableCarControls();
         //Move the player onto the car
-        pm.gameObject.SetActive(false);
-        pm.gameObject.transform.position = cm.characterStorage.position;
-        pm.gameObject.transform.rotation = cm.characterStorage.rotation;
         pm.gameObject.transform.SetParent(cm.characterStorage.transform, false);
+        pm.gameObject.transform.localPosition = new Vector3(0f, 0f, 0f);
+        pm.gameObject.SetActive(false);
         //Stop animation
         carAnimator.SetBool("insideCar", true);
+        //Switch off Water Collider
+        waterCollider.enabled = false;
     }
 
     private void exitCar()
     {
         //Activate Player
-        pm.gameObject.transform.SetParent(null,false);
         pm.gameObject.SetActive(true);
+        pm.gameObject.transform.SetParent(null,false);
+        pm.gameObject.transform.position = cm.characterStorage.transform.position;
         //Camera Change
         playerCamera.gameObject.SetActive(true);
-        carCamera.GetComponent<Camera>().enabled = false;
+        carCamera.gameObject.SetActive(false);
         //Change COntrols
         cm.disableCarControls();
         pm.enablePlayerControls();
         //Start Animation
         carAnimator.SetBool("insideCar", false);
+        //Enable Water Collider
+        waterCollider.enabled = true;
     }
 }

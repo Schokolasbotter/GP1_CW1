@@ -5,10 +5,11 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.Audio;
 
 public class PlayerWeaponScript : MonoBehaviour
 {
-    private enum Weaponstate
+    public enum Weaponstate
     {
         Binoculars,
         Gun
@@ -16,7 +17,7 @@ public class PlayerWeaponScript : MonoBehaviour
 
     [Header("Variables")]
     //Variables
-    [SerializeField] private Weaponstate weaponState = Weaponstate.Binoculars;
+    public Weaponstate weaponState = Weaponstate.Binoculars;
     [SerializeField] private float normalFov;
     [SerializeField] private float binocularFov;
     [SerializeField] private float gunFov;
@@ -47,10 +48,13 @@ public class PlayerWeaponScript : MonoBehaviour
     public GameObject particleSystemGameObject;
     private new ParticleSystem particleSystem;
     public TextMeshProUGUI scannerText, gunText, crosshairText;
+    private AudioSource audiosource;
+    public AudioClip laserClip;
 
     private void Start()
     {
         particleSystem = particleSystemGameObject.GetComponent<ParticleSystem>();
+        audiosource = GetComponent<AudioSource>();
     }
 
     void Update()
@@ -72,6 +76,7 @@ public class PlayerWeaponScript : MonoBehaviour
             else if(weaponState == Weaponstate.Binoculars)
             {
                 crosshairText.text = "O";
+                scan();
             }
             t = Mathf.Clamp01(t + (fovSpeed * Time.deltaTime));
         }
@@ -134,6 +139,7 @@ public class PlayerWeaponScript : MonoBehaviour
         chargingTimer = 0;
         coolingTimer = 0;
         cooling = true;
+        audiosource.PlayOneShot(laserClip);
     }
     void aim()
     {
@@ -170,6 +176,20 @@ public class PlayerWeaponScript : MonoBehaviour
             gunText.color = new Color(0.416f, 0.416f, 0.416f);
             scannerText.text = "Scanner<";
             scannerText.color = Color.white;
+        }
+    }
+
+    private void scan()
+    {
+        RaycastHit rayHit;
+        Ray ray = playerCamera.ScreenPointToRay(new Vector3(playerCamera.scaledPixelWidth/2,playerCamera.scaledPixelHeight/2,0f));
+        Debug.DrawRay(ray.origin, ray.direction * 1000, Color.red);
+        if (Physics.Raycast(ray, out rayHit))
+        {
+            if(rayHit.collider.gameObject.tag == "Guard" || rayHit.collider.gameObject.tag == "NPC" || rayHit.collider.gameObject.tag == "Bandit")
+            {
+                rayHit.collider.GetComponent<uiMarksScript>().onRaycastHit();
+            }
         }
     }
 

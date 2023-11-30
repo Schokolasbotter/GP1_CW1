@@ -91,9 +91,27 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""EnterCar"",
+                    ""name"": ""Interact"",
                     ""type"": ""Button"",
                     ""id"": ""6e43a0f1-5014-4e1e-a059-3a9b8da93a67"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""MenuConfirm"",
+                    ""type"": ""Button"",
+                    ""id"": ""c86a7fd6-35b2-46c3-82c3-d13e76973a4f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Pause"",
+                    ""type"": ""Button"",
+                    ""id"": ""6ad45249-60ca-4f31-a840-0b27781e1206"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -229,7 +247,29 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""EnterCar"",
+                    ""action"": ""Interact"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4fac9539-0105-452e-a286-8c172fc5e4ed"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MenuConfirm"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9067e34f-d4f1-4a81-b544-fc0da86b6d15"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pause"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -247,6 +287,24 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Pause"",
+                    ""type"": ""Button"",
+                    ""id"": ""fea08289-588d-493f-932c-46eba24fdf54"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""MenuConfirm"",
+                    ""type"": ""Button"",
+                    ""id"": ""1f76e926-408e-40ed-a72d-c137264da57a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 },
                 {
                     ""name"": ""Boost"",
@@ -344,6 +402,28 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""action"": ""ExitCar"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2c06a3e0-5e30-4d0a-aefc-6443e300a061"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MenuConfirm"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""bdf601b9-03fe-4ccc-b9c7-370dd12e8f87"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -365,10 +445,14 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         m_Character_WeaponSwap = m_Character.FindAction("WeaponSwap", throwIfNotFound: true);
         m_Character_Aiming = m_Character.FindAction("Aiming", throwIfNotFound: true);
         m_Character_Shooting = m_Character.FindAction("Shooting", throwIfNotFound: true);
-        m_Character_EnterCar = m_Character.FindAction("EnterCar", throwIfNotFound: true);
+        m_Character_Interact = m_Character.FindAction("Interact", throwIfNotFound: true);
+        m_Character_MenuConfirm = m_Character.FindAction("MenuConfirm", throwIfNotFound: true);
+        m_Character_Pause = m_Character.FindAction("Pause", throwIfNotFound: true);
         // Car
         m_Car = asset.FindActionMap("Car", throwIfNotFound: true);
         m_Car_Driving = m_Car.FindAction("Driving", throwIfNotFound: true);
+        m_Car_Pause = m_Car.FindAction("Pause", throwIfNotFound: true);
+        m_Car_MenuConfirm = m_Car.FindAction("MenuConfirm", throwIfNotFound: true);
         m_Car_Boost = m_Car.FindAction("Boost", throwIfNotFound: true);
         m_Car_ExitCar = m_Car.FindAction("ExitCar", throwIfNotFound: true);
     }
@@ -439,7 +523,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Character_WeaponSwap;
     private readonly InputAction m_Character_Aiming;
     private readonly InputAction m_Character_Shooting;
-    private readonly InputAction m_Character_EnterCar;
+    private readonly InputAction m_Character_Interact;
+    private readonly InputAction m_Character_MenuConfirm;
+    private readonly InputAction m_Character_Pause;
     public struct CharacterActions
     {
         private @InputActions m_Wrapper;
@@ -451,7 +537,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         public InputAction @WeaponSwap => m_Wrapper.m_Character_WeaponSwap;
         public InputAction @Aiming => m_Wrapper.m_Character_Aiming;
         public InputAction @Shooting => m_Wrapper.m_Character_Shooting;
-        public InputAction @EnterCar => m_Wrapper.m_Character_EnterCar;
+        public InputAction @Interact => m_Wrapper.m_Character_Interact;
+        public InputAction @MenuConfirm => m_Wrapper.m_Character_MenuConfirm;
+        public InputAction @Pause => m_Wrapper.m_Character_Pause;
         public InputActionMap Get() { return m_Wrapper.m_Character; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -482,9 +570,15 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @Shooting.started += instance.OnShooting;
             @Shooting.performed += instance.OnShooting;
             @Shooting.canceled += instance.OnShooting;
-            @EnterCar.started += instance.OnEnterCar;
-            @EnterCar.performed += instance.OnEnterCar;
-            @EnterCar.canceled += instance.OnEnterCar;
+            @Interact.started += instance.OnInteract;
+            @Interact.performed += instance.OnInteract;
+            @Interact.canceled += instance.OnInteract;
+            @MenuConfirm.started += instance.OnMenuConfirm;
+            @MenuConfirm.performed += instance.OnMenuConfirm;
+            @MenuConfirm.canceled += instance.OnMenuConfirm;
+            @Pause.started += instance.OnPause;
+            @Pause.performed += instance.OnPause;
+            @Pause.canceled += instance.OnPause;
         }
 
         private void UnregisterCallbacks(ICharacterActions instance)
@@ -510,9 +604,15 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @Shooting.started -= instance.OnShooting;
             @Shooting.performed -= instance.OnShooting;
             @Shooting.canceled -= instance.OnShooting;
-            @EnterCar.started -= instance.OnEnterCar;
-            @EnterCar.performed -= instance.OnEnterCar;
-            @EnterCar.canceled -= instance.OnEnterCar;
+            @Interact.started -= instance.OnInteract;
+            @Interact.performed -= instance.OnInteract;
+            @Interact.canceled -= instance.OnInteract;
+            @MenuConfirm.started -= instance.OnMenuConfirm;
+            @MenuConfirm.performed -= instance.OnMenuConfirm;
+            @MenuConfirm.canceled -= instance.OnMenuConfirm;
+            @Pause.started -= instance.OnPause;
+            @Pause.performed -= instance.OnPause;
+            @Pause.canceled -= instance.OnPause;
         }
 
         public void RemoveCallbacks(ICharacterActions instance)
@@ -535,6 +635,8 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Car;
     private List<ICarActions> m_CarActionsCallbackInterfaces = new List<ICarActions>();
     private readonly InputAction m_Car_Driving;
+    private readonly InputAction m_Car_Pause;
+    private readonly InputAction m_Car_MenuConfirm;
     private readonly InputAction m_Car_Boost;
     private readonly InputAction m_Car_ExitCar;
     public struct CarActions
@@ -542,6 +644,8 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         private @InputActions m_Wrapper;
         public CarActions(@InputActions wrapper) { m_Wrapper = wrapper; }
         public InputAction @Driving => m_Wrapper.m_Car_Driving;
+        public InputAction @Pause => m_Wrapper.m_Car_Pause;
+        public InputAction @MenuConfirm => m_Wrapper.m_Car_MenuConfirm;
         public InputAction @Boost => m_Wrapper.m_Car_Boost;
         public InputAction @ExitCar => m_Wrapper.m_Car_ExitCar;
         public InputActionMap Get() { return m_Wrapper.m_Car; }
@@ -556,6 +660,12 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @Driving.started += instance.OnDriving;
             @Driving.performed += instance.OnDriving;
             @Driving.canceled += instance.OnDriving;
+            @Pause.started += instance.OnPause;
+            @Pause.performed += instance.OnPause;
+            @Pause.canceled += instance.OnPause;
+            @MenuConfirm.started += instance.OnMenuConfirm;
+            @MenuConfirm.performed += instance.OnMenuConfirm;
+            @MenuConfirm.canceled += instance.OnMenuConfirm;
             @Boost.started += instance.OnBoost;
             @Boost.performed += instance.OnBoost;
             @Boost.canceled += instance.OnBoost;
@@ -569,6 +679,12 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @Driving.started -= instance.OnDriving;
             @Driving.performed -= instance.OnDriving;
             @Driving.canceled -= instance.OnDriving;
+            @Pause.started -= instance.OnPause;
+            @Pause.performed -= instance.OnPause;
+            @Pause.canceled -= instance.OnPause;
+            @MenuConfirm.started -= instance.OnMenuConfirm;
+            @MenuConfirm.performed -= instance.OnMenuConfirm;
+            @MenuConfirm.canceled -= instance.OnMenuConfirm;
             @Boost.started -= instance.OnBoost;
             @Boost.performed -= instance.OnBoost;
             @Boost.canceled -= instance.OnBoost;
@@ -610,11 +726,15 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         void OnWeaponSwap(InputAction.CallbackContext context);
         void OnAiming(InputAction.CallbackContext context);
         void OnShooting(InputAction.CallbackContext context);
-        void OnEnterCar(InputAction.CallbackContext context);
+        void OnInteract(InputAction.CallbackContext context);
+        void OnMenuConfirm(InputAction.CallbackContext context);
+        void OnPause(InputAction.CallbackContext context);
     }
     public interface ICarActions
     {
         void OnDriving(InputAction.CallbackContext context);
+        void OnPause(InputAction.CallbackContext context);
+        void OnMenuConfirm(InputAction.CallbackContext context);
         void OnBoost(InputAction.CallbackContext context);
         void OnExitCar(InputAction.CallbackContext context);
     }

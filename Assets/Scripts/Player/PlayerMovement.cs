@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.Events;
 
 public class PlayerMovement : MonoBehaviour
@@ -21,7 +22,8 @@ public class PlayerMovement : MonoBehaviour
     public Vector3 characterVelocity;
     [SerializeField] private float gravityAcc = 9.81f;
     public bool inCarStorage = false;
-
+    public bool canEnter = false;
+    public int YInverted = 1;
 
     //References and Objects
     [Header("References", order=1)]
@@ -48,12 +50,6 @@ public class PlayerMovement : MonoBehaviour
         {
             onEnterCar = new UnityEvent();
         }
-    }
-
-    // Update is called once per frame
-    void FixedUpdate()
-    {
-      
     }
 
     private void Update()
@@ -94,15 +90,43 @@ public class PlayerMovement : MonoBehaviour
         //Horizontal
         transform.Rotate(Vector3.up, lookingVector.x * lookingSensibility * Time.deltaTime);
         //Vertical 
-        verticalRotation -= lookingVector.y * lookingSensibility * Time.deltaTime;
+        verticalRotation -= YInverted * lookingVector.y * lookingSensibility * Time.deltaTime;
         verticalRotation = Mathf.Clamp(verticalRotation, -70, 70);
         playerCamera.transform.localRotation = Quaternion.Euler(verticalRotation, 0, 0);
         //Entering Car
-        if (inputActions.Character.EnterCar.IsPressed())
+        if (inputActions.Character.Interact.IsPressed() && canEnter)
         {
             onEnterCar.Invoke();
         }
+    }
 
+    public void invertY()
+    {
+        switch(YInverted) {
+            case 1:
+                YInverted = -1;
+                break;
+            case -1:
+                YInverted = 1;
+                break;
+        }
+    }
+
+    public void sensibility(float sensibility)
+    {
+        lookingSensibility = Mathf.Lerp(0f,100f,sensibility);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.gameObject.tag == "Water")
+        {
+            characterController.enabled = false;
+            NavMeshHit hit;
+            NavMesh.SamplePosition(transform.position, out hit, 100f,NavMesh.AllAreas);
+            transform.position = hit.position;
+            characterController.enabled = true;
+        }
     }
 
     //InputActions

@@ -18,6 +18,7 @@ public class regularNPC : MonoBehaviour
     {
         navMeshAgent = GetComponent<NavMeshAgent>();
         animator = GetComponentInChildren<Animator>();
+        
     }
 
     // Update is called once per frame

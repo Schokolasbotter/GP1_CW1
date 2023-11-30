@@ -5,6 +5,15 @@ TagManager:
   serializedVersion: 2
   tags:
   - Dock
+  - Bullet
+  - BulletContainer
+  - NPC
+  - Guard
+  - Bandit
+  - Game Manager
+  - Water
+  - Car
+  - Character Storage
   layers:
   - Default
   - TransparentFX
@@ -12,10 +21,10 @@ TagManager:
   - Ground
   - Water
   - UI
-  - 
-  - 
-  - 
-  - 
+  - Player
+  - EnemieUIElements
+  - Glow
+  - WayPoints
   - 
   - 
   - 
@@ -41,4 +50,7 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: EnemieUIElements
+    uniqueID: 2307950579
     locked: 0

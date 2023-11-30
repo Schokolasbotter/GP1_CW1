@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
@@ -17,11 +18,14 @@ public class carMovement : MonoBehaviour
     private Vector3 startingPosition, dockPosition;
     private Quaternion startingRotation, dockRotation;
     private float dockTimer = 0f;
+    public bool canEnter;
+    public TextMeshProUGUI instructionsText;
 
     //References and Objects
     private InputActions inputActions;
     private CharacterController carController;
     public Transform characterStorage;
+    private AudioSource audioSource;
 
     public UnityEvent onExitCar;
     #endregion
@@ -31,6 +35,7 @@ public class carMovement : MonoBehaviour
     {
          
         carController = GetComponent<CharacterController>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Start is called before the first frame update
@@ -40,12 +45,6 @@ public class carMovement : MonoBehaviour
         {
             onExitCar = new UnityEvent();
         }
-    }
-
-    // Update is called once per frame
-    void FixedUpdate()
-    {
-
     }
 
     private void Update()
@@ -63,9 +62,17 @@ public class carMovement : MonoBehaviour
         {
             usedSpeed = movementSpeed;
         }
-
+        if(movementVector == Vector3.zero)
+        {
+            audioSource.Stop();
+        }
+        else if(movementVector != Vector3.zero && !audioSource.isPlaying) 
+        {
+            audioSource.Play();
+        }
         carController.Move(movementVector * usedSpeed * Time.deltaTime);
         carController.gameObject.transform.Rotate(Vector3.up, inputVector.x * turnSpeed * Time.deltaTime);
+        carController.transform.position = new Vector3(transform.position.x,6f,transform.position.z);
 
 
         //Entering Car
@@ -91,7 +98,7 @@ public class carMovement : MonoBehaviour
     }
 
 
-    private void OnTriggerStay(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "Dock")
         {
@@ -99,6 +106,12 @@ public class carMovement : MonoBehaviour
             dockPosition = other.transform.position;
             dockRotation = other.transform.rotation;
             dockPosition = new Vector3(dockPosition.x,transform.position.y, dockPosition.z);
+            instructionsText.text = "[E] To Exit Car";
+        }
+        else if(other.gameObject.tag == "Player")
+        {
+            canEnter = true;
+            instructionsText.text = "[E] To Enter Car";
         }
     }
 
@@ -107,6 +120,12 @@ public class carMovement : MonoBehaviour
         if (other.gameObject.tag == "Dock")
         {
             canDock = false;
+            instructionsText.text = "";
+        }
+        else if(other.gameObject.tag == "Player")
+        {
+            canEnter = false;
+            instructionsText.text = "";
         }
     }
 
